@@ -4,31 +4,35 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.dependencyinjection.common.dependencyInjection.Service
 import com.example.dependencyinjection.questions.FetchQuestionsUseCase
 import com.example.dependencyinjection.questions.Question
-import com.example.dependencyinjection.screens.common.ScreensNavigator
+import com.example.dependencyinjection.screens.common.ScreensNavigatorImpl
 import com.example.dependencyinjection.screens.common.activities.BaseFragment
 import com.example.dependencyinjection.screens.common.dialogs.DialogsNavigator
+import com.example.dependencyinjection.screens.common.viewsMvc.ScreensNavigator
 import com.example.dependencyinjection.screens.common.viewsMvc.ViewMvcFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 class QuestionsListFragment : BaseFragment(), QuestionsListViewMvc.Listener {
 
     private val coroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
-    @field:Service
-    private lateinit var fetchQuestionsUseCase: FetchQuestionsUseCase
-    @field:Service
-    private lateinit var dialogsNavigator: DialogsNavigator
-    @field:Service
-    private lateinit var screensNavigator: ScreensNavigator
-    @field:Service
-    private lateinit var viewMvcFactory: ViewMvcFactory
+    @Inject
+    lateinit var fetchQuestionsUseCase: FetchQuestionsUseCase
+
+    @Inject
+    lateinit var dialogsNavigator: DialogsNavigator
+
+    @Inject
+    lateinit var screensNavigator: ScreensNavigator
+
+    @Inject
+    lateinit var viewMvcFactory: ViewMvcFactory
 
     private lateinit var questionsListViewMvc: QuestionsListViewMvc
 
@@ -90,5 +94,9 @@ class QuestionsListFragment : BaseFragment(), QuestionsListViewMvc.Listener {
 
     override fun onQuestionClicked(clickedQuestion: Question) {
         screensNavigator.toQuestionDetails(clickedQuestion.id)
+    }
+
+    override fun onViewModelClicked() {
+        screensNavigator.toViewModel()
     }
 }

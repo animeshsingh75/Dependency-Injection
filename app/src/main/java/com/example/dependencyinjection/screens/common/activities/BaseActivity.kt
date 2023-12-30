@@ -2,20 +2,20 @@ package com.example.dependencyinjection.screens.common.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import com.example.dependencyinjection.MyApplication
-import com.example.dependencyinjection.common.dependencyInjection.ActivityCompositionRoot
-import com.example.dependencyinjection.common.dependencyInjection.Injector
-import com.example.dependencyinjection.common.dependencyInjection.PresentationCompositionRoot
+import com.example.dependencyinjection.common.dependencyInjection.presentation.PresentationModule
 
 open class BaseActivity : AppCompatActivity() {
 
-    private val appCompositionRoot get() = (application as MyApplication).appCompositionRoot
-    val activityCompositionRoot by lazy {
-        ActivityCompositionRoot(this, appCompositionRoot)
+    private val appComponent get() = (application as MyApplication).appComponent
+    val activityComponent by lazy {
+        appComponent.newActivityComponentBuilder()
+            .activity(this)
+            .build()
     }
 
-    private val compositionRoot by lazy {
-        PresentationCompositionRoot(activityCompositionRoot)
+    private val presentationComponent by lazy {
+        activityComponent.newPresentationComponent(PresentationModule(this))
     }
 
-    protected val injector get() = Injector(compositionRoot)
+    protected val injector get() = presentationComponent
 }
