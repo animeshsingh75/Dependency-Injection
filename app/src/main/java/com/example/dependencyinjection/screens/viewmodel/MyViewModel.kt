@@ -3,24 +3,27 @@ package com.example.dependencyinjection.screens.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.dependencyinjection.questions.FetchQuestionDetailsUseCase
 import com.example.dependencyinjection.questions.FetchQuestionsUseCase
 import com.example.dependencyinjection.questions.Question
-import com.example.dependencyinjection.screens.common.viewmodel.SavedStateViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class MyViewModel @Inject constructor(
     private val fetchQuestionsUseCase: FetchQuestionsUseCase,
     private val fetchQuestionDetailsUseCase: FetchQuestionDetailsUseCase,
-) : SavedStateViewModel() {
-    private lateinit var _questions: MutableLiveData<List<Question>>
+    private val savedStateHandle: SavedStateHandle
+) : ViewModel() {
+    private var _questions: MutableLiveData<List<Question>> =
+        savedStateHandle.getLiveData("questions")
     val questions: LiveData<List<Question>> get() = _questions
 
-    override fun init(savedStateHandle: SavedStateHandle) {
-        _questions = savedStateHandle.getLiveData("questions")
+    init {
         viewModelScope.launch {
             delay(5000)
             val result = fetchQuestionsUseCase.fetchLatestQuestions()

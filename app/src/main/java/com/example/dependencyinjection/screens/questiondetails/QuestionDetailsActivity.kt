@@ -9,6 +9,7 @@ import com.example.dependencyinjection.screens.common.activities.BaseActivity
 import com.example.dependencyinjection.screens.common.dialogs.DialogsNavigator
 import com.example.dependencyinjection.screens.common.viewsMvc.ScreensNavigator
 import com.example.dependencyinjection.screens.common.viewsMvc.ViewMvcFactory
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -16,6 +17,7 @@ import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class QuestionDetailsActivity : BaseActivity(), QuestionDetailsMvc.Listener {
 
     private val coroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
@@ -38,7 +40,6 @@ class QuestionDetailsActivity : BaseActivity(), QuestionDetailsMvc.Listener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        injector.inject(this)
         questionDetailsMvc = viewMvcFactory.newQuestionDetailsViewMvc(null)
         setContentView(questionDetailsMvc.rootView)
 

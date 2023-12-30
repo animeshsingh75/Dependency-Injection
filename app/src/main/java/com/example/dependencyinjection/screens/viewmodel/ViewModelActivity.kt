@@ -4,14 +4,15 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
-import androidx.lifecycle.ViewModelProvider
+import androidx.activity.viewModels
 import com.example.dependencyinjection.R
 import com.example.dependencyinjection.screens.common.activities.BaseActivity
 import com.example.dependencyinjection.screens.common.toolbar.MyToolbar
-import com.example.dependencyinjection.screens.common.viewmodel.ViewModelFactory
 import com.example.dependencyinjection.screens.common.viewsMvc.ScreensNavigator
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class ViewModelActivity : BaseActivity() {
 
     @Inject
@@ -19,14 +20,10 @@ class ViewModelActivity : BaseActivity() {
 
     private lateinit var toolbar: MyToolbar
 
-    @Inject
-    lateinit var myViewModelFactory:ViewModelFactory
-
-    private lateinit var myViewModel: MyViewModel
-    private lateinit var myViewModel2: MyViewModel2
+    private val myViewModel: MyViewModel by viewModels()
+    private val myViewModel2: MyViewModel2 by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        injector.inject(this)
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.layout_view_model)
@@ -35,10 +32,6 @@ class ViewModelActivity : BaseActivity() {
         toolbar.setNavigateUpListener {
             screensNavigator.navigateBack()
         }
-
-        myViewModel = ViewModelProvider(this, myViewModelFactory)[MyViewModel::class.java]
-        myViewModel2 = ViewModelProvider(this, myViewModelFactory)[MyViewModel2::class.java]
-
         myViewModel.questions.observe(this) { questions ->
             Toast.makeText(this, "Fetched ${questions.size} questions", Toast.LENGTH_SHORT).show()
         }

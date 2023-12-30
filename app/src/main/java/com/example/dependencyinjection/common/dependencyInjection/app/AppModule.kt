@@ -1,20 +1,23 @@
 package com.example.dependencyinjection.common.dependencyInjection.app
 
-import android.app.Application
 import com.example.dependencyinjection.common.dependencyInjection.Retrofit1
 import com.example.dependencyinjection.common.dependencyInjection.Retrofit2
 import com.example.dependencyinjection.networking.StackoverflowApi
 import com.example.dependencyinjection.networking.UrlProvider
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Singleton
 
 @Module
-class AppModule(val application: Application) {
+@InstallIn(SingletonComponent::class)
+class AppModule {
 
+    @Singleton
     @Provides
-    @AppScope
     @Retrofit1
     fun retrofit1(urlProvider: UrlProvider): Retrofit {
         return Retrofit.Builder()
@@ -23,8 +26,8 @@ class AppModule(val application: Application) {
             .build()
     }
 
+    @Singleton
     @Provides
-    @AppScope
     @Retrofit2
     fun retrofit2(urlProvider: UrlProvider): Retrofit {
         return Retrofit.Builder()
@@ -33,14 +36,11 @@ class AppModule(val application: Application) {
             .build()
     }
 
+    @Singleton
     @Provides
-    @AppScope
     fun urlProvider() = UrlProvider()
 
-    @Provides
-    fun application() = application
-
-    @AppScope
+    @Singleton
     @Provides
     fun stackoverflowApi(@Retrofit1 retrofit: Retrofit) =
         retrofit.create(StackoverflowApi::class.java)

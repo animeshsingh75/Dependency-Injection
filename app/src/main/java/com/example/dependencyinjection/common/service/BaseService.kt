@@ -6,9 +6,4 @@ import com.example.dependencyinjection.common.dependencyInjection.service.Servic
 
 abstract class BaseService : Service() {
 
-    private val appComponent get() = (application as MyApplication).appComponent
-
-    val serviceComponent by lazy {
-        appComponent.newServiceComponent(ServiceModule(this))
-    }
 }

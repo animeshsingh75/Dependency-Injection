@@ -6,11 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.dependencyinjection.questions.FetchQuestionsUseCase
 import com.example.dependencyinjection.questions.Question
-import com.example.dependencyinjection.screens.common.ScreensNavigatorImpl
 import com.example.dependencyinjection.screens.common.activities.BaseFragment
 import com.example.dependencyinjection.screens.common.dialogs.DialogsNavigator
 import com.example.dependencyinjection.screens.common.viewsMvc.ScreensNavigator
 import com.example.dependencyinjection.screens.common.viewsMvc.ViewMvcFactory
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -18,6 +18,7 @@ import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class QuestionsListFragment : BaseFragment(), QuestionsListViewMvc.Listener {
 
     private val coroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
@@ -40,7 +41,6 @@ class QuestionsListFragment : BaseFragment(), QuestionsListViewMvc.Listener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        injector.inject(this)
     }
 
     override fun onCreateView(
